@@ -141,6 +141,11 @@ public class BuildCoordinator {
     }
 
     public BuildSetTask createBuildSetTask(BuildConfigurationSet buildConfigurationSet, User user, boolean rebuildAll) throws CoreException {
+
+        if (buildConfigurationSet.empty()) {
+            throw new CoreException("No build configurations in this set");
+        }
+
         BuildConfigSetRecord buildConfigSetRecord = BuildConfigSetRecord.Builder.newBuilder()
                 .buildConfigurationSet(buildConfigurationSet)
                 .user(user)

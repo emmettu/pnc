@@ -144,6 +144,13 @@ public class BuildConfigurationSet implements GenericEntity<Integer> {
         return this.buildConfigSetRecords.remove(buildConfigSetRecord);
     }
 
+    /**
+     * @return whether this set contains any build configurations
+     */
+    public boolean empty() {
+        return this.buildConfigurations.isEmpty();
+    }
+
     public static class Builder {
 
         private Integer id;
