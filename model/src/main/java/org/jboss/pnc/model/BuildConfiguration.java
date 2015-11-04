@@ -25,6 +25,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -85,6 +86,8 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
     private String scmMirrorRevision;
 
     private String description;
+
+    private boolean isClone = false;
 
     @NotAudited
     @ManyToMany
@@ -547,13 +550,25 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
     public BuildConfiguration clone() {
         try {
             BuildConfiguration clone = (BuildConfiguration) super.clone();
-            clone.name = "_" + name;
+            clone.name = getCloneName();
             clone.creationTime = Date.from(Instant.now());
             clone.id = null;
+            clone.isClone = true;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException("Cloning error" + e);
         }
+    }
+
+    /**
+     * Generates clone name with date, if it is a clone of a clone it updates the existing
+     * date.
+     * @return name for the clone.
+     */
+    private String getCloneName() {
+        String originalName = isClone ? name.split("_", 2)[1] : name;
+        String date = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS").format(new Date());
+        return  date + "_" + originalName;
     }
 
     public static class Builder {
