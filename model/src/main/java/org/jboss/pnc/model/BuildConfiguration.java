@@ -87,7 +87,7 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
 
     private String description;
 
-    private boolean isClone = false;
+    private Integer cloneOf = null;
 
     @NotAudited
     @ManyToMany
@@ -543,7 +543,7 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
 
     /**
      * Creates a shallow based clone and overrides {@link #creationTime}, {@link #name} and erases {@link #id}.
-     *
+     * sets clone's {@link #cloneOf} field to be its id.
      * @return This objects clone.
      */
     @Override
@@ -553,7 +553,7 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
             clone.name = getCloneName();
             clone.creationTime = Date.from(Instant.now());
             clone.id = null;
-            clone.isClone = true;
+            clone.cloneOf = this.id;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException("Cloning error" + e);
@@ -566,7 +566,7 @@ public class BuildConfiguration implements GenericEntity<Integer>, Cloneable {
      * @return name for the clone.
      */
     private String getCloneName() {
-        String originalName = isClone ? name.split("_", 2)[1] : name;
+        String originalName = cloneOf != null ? name.split("_", 2)[1] : name;
         String date = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSS").format(new Date());
         return  date + "_" + originalName;
     }
