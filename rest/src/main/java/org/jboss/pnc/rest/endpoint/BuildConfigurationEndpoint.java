@@ -346,6 +346,15 @@ public class BuildConfigurationEndpoint extends AbstractEndpoint<BuildConfigurat
             @ApiParam(value = "Build configuration id", required = true) @PathParam("id") Integer id) {
         return fromCollection(buildConfigurationProvider.getDependencies(pageIndex, pageSize, sort, q, id));
     }
+    @GET
+    @Path("/{id}/dependents")
+    public Response getDependants(@ApiParam(value = PAGE_INDEX_DESCRIPTION) @QueryParam(PAGE_INDEX_QUERY_PARAM) @DefaultValue(PAGE_INDEX_DEFAULT_VALUE) int pageIndex,
+                                  @ApiParam(value = PAGE_SIZE_DESCRIPTION) @QueryParam(PAGE_SIZE_QUERY_PARAM) @DefaultValue(PAGE_SIZE_DEFAULT_VALUE) int pageSize,
+                                  @ApiParam(value = SORTING_DESCRIPTION) @QueryParam(SORTING_QUERY_PARAM) String sort,
+                                  @ApiParam(value = QUERY_DESCRIPTION, required = false) @QueryParam(QUERY_QUERY_PARAM) String q,
+                                  @ApiParam(value = "Build configuration id", required = true) @PathParam("id") Integer id) {
+        return fromCollection(buildConfigurationProvider.getDependants(pageIndex, pageSize, sort, q, id));
+    }
 
     @ApiOperation(value = "Adds a dependency to the specified config")
     @ApiResponses(value = {

@@ -47,13 +47,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static org.jboss.pnc.rest.utils.StreamHelper.nullableStreamOf;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withBuildConfigurationSetId;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withDependantConfiguration;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withName;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.isNotArchived;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withProductId;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withProductVersionId;
-import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.withProjectId;
+import static org.jboss.pnc.spi.datastore.predicates.BuildConfigurationPredicates.*;
 
 @Stateless
 public class BuildConfigurationProvider extends AbstractProvider<BuildConfiguration, BuildConfigurationRest> {
@@ -230,7 +224,12 @@ public class BuildConfigurationProvider extends AbstractProvider<BuildConfigurat
 
     public CollectionInfo<BuildConfigurationRest> getDependencies(int pageIndex, int pageSize, String sortingRsql, String query,
             Integer configId) {
-        return queryForCollection(pageIndex, pageSize, sortingRsql, query, withDependantConfiguration(configId));
+        return queryForCollection(pageIndex, pageSize, sortingRsql, query, withDependant(configId));
+    }
+
+    public CollectionInfo<BuildConfigurationRest> getDependants(int pageIndex, int pageSize, String sortingRsql, String query,
+                                                                Integer configId) {
+        return queryForCollection(pageIndex, pageSize, sortingRsql, query, withDependency(configId));
     }
 
     public CollectionInfo<BuildConfigurationAuditedRest> getRevisions(int pageIndex, int pageSize, Integer id) {
